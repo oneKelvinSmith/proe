@@ -10,6 +10,14 @@ defmodule MyList do
   def len([]),             do: 0
   def len([_head | tail]), do: 1 + len(tail)
 
+  def max([]), do: nil
+  def max([head | tail]) do
+    do_max(tail, head)
+  end
+  defp do_max([], max),                            do: max
+  defp do_max([head | tail], max) when max > head, do: do_max(tail, max)
+  defp do_max([head | tail], _max),                do: do_max(tail, head)
+
   def square(list), do: map(list, &(&1 * &1))
 
   def add_1(list), do: map(list, &(&1 + 1))
