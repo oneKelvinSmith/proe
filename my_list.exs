@@ -7,18 +7,23 @@ defmodule MyList do
     reduce(tail, func.(head, value), func)
   end
 
+  def len([]),             do: 0
+  def len([_head | tail]), do: 1 + len(tail)
+
   def square(list), do: map(list, &(&1 * &1))
 
   def add_1(list), do: map(list, &(&1 + 1))
 
+  def mapsum(list, func) do
+    list
+    |> map(func)
+    |> sum
+  end
+
   def sum_no_acc([]),            do: 0
   def sum_no_acc([head | tail]), do: head + sum_no_acc(tail)
 
-  def len([]),             do: 0
-  def len([_head | tail]), do: 1 + len(tail)
-
-  def sum(list), do: sum(list, 0)
-
-  defp sum([], total),            do: total
-  defp sum([head | tail], total), do: sum(tail, head + total)
+  def sum(list), do: do_sum(list, 0)
+  defp do_sum([], total),            do: total
+  defp do_sum([head | tail], total), do: do_sum(tail, head + total)
 end
