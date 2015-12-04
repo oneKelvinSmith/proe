@@ -7,6 +7,11 @@ defmodule MyList do
     reduce(tail, func.(head, value), func)
   end
 
+  def sum(list), do: reduce list, 0, &(&1 + &2)
+
+  def sum_no_acc([]),            do: 0
+  def sum_no_acc([head | tail]), do: head + sum_no_acc(tail)
+
   def len([]),             do: 0
   def len([_head | tail]), do: 1 + len(tail)
 
@@ -29,13 +34,6 @@ defmodule MyList do
     |> map(func)
     |> sum
   end
-
-  def sum_no_acc([]),            do: 0
-  def sum_no_acc([head | tail]), do: head + sum_no_acc(tail)
-
-  def sum(list), do: do_sum(list, 0)
-  defp do_sum([], total),            do: total
-  defp do_sum([head | tail], total), do: do_sum(tail, head + total)
 
   def caesar([], _),   do: []
   def caesar(list, n), do: map list, &shift(&1, n)
