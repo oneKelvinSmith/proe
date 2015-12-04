@@ -34,4 +34,13 @@ defmodule MyList do
   def sum(list), do: do_sum(list, 0)
   defp do_sum([], total),            do: total
   defp do_sum([head | tail], total), do: do_sum(tail, head + total)
+
+  def caesar([], _),   do: []
+  def caesar(list, n), do: map list, &shift(&1, n)
+
+  @char_offset 96
+  defp shift(char, n), do: shift_mod_26(char - @char_offset, n) + @char_offset
+
+  @modulus 26
+  defp shift_mod_26(char, n), do: rem(char + n, @modulus)
 end
