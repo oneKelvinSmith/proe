@@ -10,10 +10,12 @@ defmodule MyList do
   def len([]),             do: 0
   def len([_head | tail]), do: 1 + len(tail)
 
+  def span(from, to) when from == to, do: [from]
+  def span(from, to) when from > to,  do: span(to, from)
+  def span(from, to), do: [from | span(from + 1, to)]
+
   def max([]), do: nil
-  def max([head | tail]) do
-    do_max(tail, head)
-  end
+  def max([head | tail]), do: do_max(tail, head)
   defp do_max([], max),                            do: max
   defp do_max([head | tail], max) when max > head, do: do_max(tail, max)
   defp do_max([head | tail], _max),                do: do_max(tail, head)
