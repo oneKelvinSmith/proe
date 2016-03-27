@@ -4,4 +4,9 @@ defmodule MyEnum do
     each(tail, func)
   end
   def each([], _func), do: :ok
+
+  def all?([head | tail], func) do
+    func.(head) and all?(tail, func)
+  end
+  def all?([], _func), do: true
 end
