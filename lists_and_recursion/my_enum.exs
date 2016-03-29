@@ -18,16 +18,11 @@ defmodule MyEnum do
   def filter([], _func), do: []
 
   def split(list, count) when count < 0, do: split(list, count(list) + count)
-  def split(list, count), do: do_split(list, {count, [], []})
-  defp do_split([head | tail], {count, left, right}) do
-    if count > 0 do
-      left = [head | left]
-    else
-      right = [head | right]
-    end
-    do_split(tail, {count - 1, left, right})
+  def split(list, count), do: do_split([], list, count)
+  defp do_split(left, [head | tail], count) when count > 0 do
+    do_split([head | left], tail, count - 1)
   end
-  defp do_split([], {_, left, right}), do: {reverse(left), reverse(right)}
+  defp do_split(left, right, 0), do: {reverse(left), right}
 
   def count(list), do: do_count(list, 0)
   defp do_count([_head | tail], count), do: do_count(tail, count + 1)
