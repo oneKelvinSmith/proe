@@ -35,4 +35,20 @@ defmodule MyEnum do
     do_reverse(tail, [head | reversed])
   end
   defp do_reverse([], reversed), do: reversed
+
+  def take([], _count), do: []
+  def take(list, count) when count < 0 do
+    list
+    |> reverse
+    |> do_take(-count, [])
+  end
+  def take(list, count) do
+    list
+    |> do_take(count, [])
+    |> reverse
+  end
+  defp do_take([head | tail], count, taken) when count > 0 do
+    do_take(tail, count - 1, [head | taken])
+  end
+  defp do_take(_tail, 0, taken), do: taken
 end
