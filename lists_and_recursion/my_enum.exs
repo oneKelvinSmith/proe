@@ -5,9 +5,10 @@ defmodule MyEnum do
   end
   def each([], _func), do: :ok
 
-  def all?([head | tail], func), do: func.(head) and all?(tail, func)
   def all?([], _func),           do: true
+  def all?([head | tail], func), do: func.(head) and all?(tail, func)
 
+  def filter([], _func), do: []
   def filter([head | tail], func) do
     if func.(head) do
       [head | filter(tail, func)]
@@ -15,8 +16,8 @@ defmodule MyEnum do
       filter(tail, func)
     end
   end
-  def filter([], _func), do: []
 
+  def split([], _count),                 do: {[], []}
   def split(list, count) when count < 0, do: split(list, count(list) + count)
   def split(list, count),                do: do_split([], list, count)
   defp do_split(left, [head | tail], count) when count > 0 do
