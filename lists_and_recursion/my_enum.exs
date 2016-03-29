@@ -25,7 +25,7 @@ defmodule MyEnum do
   end
   defp do_split(left, right, 0), do: {reverse(left), right}
 
-  def count(list), do: do_count(list, 0)
+  def count(list),                      do: do_count(list, 0)
   defp do_count([_head | tail], count), do: do_count(tail, count + 1)
   defp do_count([], count),             do: count
 
