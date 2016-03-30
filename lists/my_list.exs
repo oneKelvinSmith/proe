@@ -35,11 +35,9 @@ defmodule MyList do
     |> sum
   end
 
-  def flatten([]),     do: []
-  def flatten([head | tail]) do
-    flatten(head) ++ flatten(tail)
-  end
-  def flatten(item), do: [item]
+  def flatten([]),            do: []
+  def flatten([head | tail]), do: flatten(head) ++ flatten(tail)
+  def flatten(item),          do: [item]
 
   def caesar([], _),   do: []
   def caesar(list, n), do: map list, &shift(&1, n)
