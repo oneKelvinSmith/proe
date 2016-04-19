@@ -5,3 +5,5 @@ defmodule Example do
     doc.run(Doctest.defaults)
   end
 end
+
+Example.func
