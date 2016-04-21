@@ -10,4 +10,9 @@ defmodule Parse do
   defp number_digits([non_digit | _], _) do
     raise "Invalid digit '#{[non_digit]}'"
   end
+
+  def ascii?([]), do: false
+  def ascii?([head | _])    when head > 127,  do: false
+  def ascii?([_ | []]),                       do: true
+  def ascii?([head | tail]),                  do: ascii?(tail)
 end
