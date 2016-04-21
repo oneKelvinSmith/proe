@@ -51,7 +51,7 @@ defmodule MyList do
   def primes(n) when n < 2,  do: []
   def primes(n) when n == 2, do: [2]
   def primes(n) do
-    all = span(2, n - 1)
+    all = span(2, n)
     composites = composites(n)
 
     all -- composites
@@ -60,7 +60,6 @@ defmodule MyList do
   def composites(n) do
     x_s = span(2, div(n, 2))
 
-    for x <- x_s, y <- x_s, x <= y, x * y < n, do: x * y
+    for x <- x_s, y <- x_s, x <= y, x * y <= n, do: x * y
   end
-
 end
