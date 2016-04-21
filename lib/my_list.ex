@@ -47,4 +47,20 @@ defmodule MyList do
 
   @modulus 26
   defp shift_mod_26(char, n), do: rem(char + n, @modulus)
+
+  def primes(n) when n < 2,  do: []
+  def primes(n) when n == 2, do: [2]
+  def primes(n) do
+    all = span(2, n - 1)
+    composites = composites(n)
+
+    all -- composites
+  end
+
+  def composites(n) do
+    x_s = span(2, div(n, 2))
+
+    for x <- x_s, y <- x_s, x <= y, x * y < n, do: x * y
+  end
+
 end
