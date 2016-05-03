@@ -20,10 +20,13 @@ defmodule Calculator do
   end
 
   defp solve([operator | operators], [first, second | numbers]) do
-    result = case operator do
-      "+" -> Kernel.+(first, second)
-      "-" -> Kernel.-(first, second)
-    end
+    result =
+      case operator do
+        "*" -> Kernel.*(first, second)
+        "+" -> Kernel.+(first, second)
+        "-" -> Kernel.-(first, second)
+        "/" -> Kernel./(first, second)
+      end
     solve(operators, [result | numbers])
   end
   defp solve([], [result | []]), do: result
