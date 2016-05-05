@@ -1,7 +1,7 @@
 defmodule SalesTaxTest do
   use ExUnit.Case
 
-  test "total_amount returns unified list of sales tax" do
+  test "calculate/2 returns unified list of sales tax" do
     tax_rates = [NC: 0.075, TX: 0.08]
     orders = [
       [id: 123, ship_to: :NC, net_amount: 100.00],
@@ -14,7 +14,7 @@ defmodule SalesTaxTest do
       [id: 130, ship_to: :NC, net_amount:  50.00],
     ]
 
-    assert SalesTax.calculate_totals(tax_rates, orders) == [
+    assert SalesTax.calculate(tax_rates, orders) == [
       [total_amount: 107.50, id: 123, ship_to: :NC, net_amount: 100.00],
       [total_amount: 35.50 , id: 124, ship_to: :OK, net_amount: 35.50],
       [total_amount: 25.92 , id: 125, ship_to: :TX, net_amount: 24.00],
