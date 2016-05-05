@@ -11,7 +11,7 @@ defmodule Words do
   end
 
   def center([]), do: :ok
-  def center([head | tail] = words) when is_list(words) do
+  def center(words) when is_list(words) do
     max = max_length words
     Enum.each words, fn(word) ->
       IO.puts justify(word, max)
