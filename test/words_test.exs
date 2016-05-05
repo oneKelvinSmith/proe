@@ -26,4 +26,16 @@ defmodule WordsTest do
       Words.center([])
     end) == ""
   end
+
+  test "capitalize_sentences/1 capitalizes sentencs..." do
+    assert Words.capitalize_sentences("oh. a DOG. woof.") == "Oh. A dog. Woof."
+  end
+
+  test "capitalizes_sentences/1 does not modify non characters" do
+    assert Words.capitalize_sentences("oh. #@!$%. maDNeSS.") == "Oh. #@!$%. Madness."
+  end
+
+  test "capitalize_sentences/1 returns an empty string when one is given" do
+    assert Words.capitalize_sentences("") == ""
+  end
 end
