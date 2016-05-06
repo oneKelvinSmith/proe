@@ -1,5 +1,5 @@
 defmodule SalesTax do
-  def calculate(tax_rates, orders) do
+  def calculate(orders, tax_rates) do
     for order <- orders do
       case order do
         [_, {:ship_to, :NC},  _] ->
