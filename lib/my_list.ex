@@ -21,9 +21,11 @@ defmodule MyList do
 
   def max([]), do: nil
   def max([head | tail]), do: do_max(tail, head)
-  defp do_max([], max),                            do: max
-  defp do_max([head | tail], max) when max > head, do: do_max(tail, max)
-  defp do_max([head | tail], _max),                do: do_max(tail, head)
+  defp do_max([], maximum),             do: maximum
+  defp do_max([head | tail], maximum) when maximum > head do
+    do_max(tail, maximum)
+  end
+  defp do_max([head | tail], _maximum), do: do_max(tail, head)
 
   def square(list), do: map(list, &(&1 * &1))
 
@@ -52,9 +54,9 @@ defmodule MyList do
   def primes(n) when n == 2, do: [2]
   def primes(n) do
     all = span(2, n)
-    composites = composites(n)
+    comps = composites(n)
 
-    all -- composites
+    all -- comps
   end
 
   def composites(n) do

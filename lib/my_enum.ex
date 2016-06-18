@@ -17,17 +17,17 @@ defmodule MyEnum do
     end
   end
 
-  def split([], _count),                 do: {[], []}
-  def split(list, count) when count < 0, do: split(list, count(list) + count)
-  def split(list, count),                do: do_split([], list, count)
-  defp do_split(left, [head | tail], count) when count > 0 do
-    do_split([head | left], tail, count - 1)
+  def split([], _tallly),                do: {[], []}
+  def split(list, tally) when tally < 0, do: split(list, count(list) + tally)
+  def split(list, tally),                do: do_split([], list, tally)
+  defp do_split(left, [head | tail], tally) when tally > 0 do
+    do_split([head | left], tail, tally - 1)
   end
   defp do_split(left, right, 0), do: {reverse(left), right}
 
   def count(list),                      do: do_count(list, 0)
-  defp do_count([_head | tail], count), do: do_count(tail, count + 1)
-  defp do_count([], count),             do: count
+  defp do_count([_head | tail], tally), do: do_count(tail, tally + 1)
+  defp do_count([], tally),             do: tally
 
   def reverse([head | tail]), do: do_reverse(tail, [head])
   def reverse([]),            do: []
@@ -36,19 +36,19 @@ defmodule MyEnum do
   end
   defp do_reverse([], reversed), do: reversed
 
-  def take([], _count), do: []
-  def take(list, count) when count < 0 do
+  def take([], _tallly), do: []
+  def take(list, tally) when tally < 0 do
     list
     |> reverse
-    |> do_take(-count, [])
+    |> do_take(-tally, [])
   end
-  def take(list, count) do
+  def take(list, tally) do
     list
-    |> do_take(count, [])
+    |> do_take(tally, [])
     |> reverse
   end
-  defp do_take([head | tail], count, taken) when count > 0 do
-    do_take(tail, count - 1, [head | taken])
+  defp do_take([head | tail], tally, taken) when tally > 0 do
+    do_take(tail, tally - 1, [head | taken])
   end
   defp do_take(_tail, 0, taken), do: taken
 end

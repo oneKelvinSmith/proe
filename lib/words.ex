@@ -1,7 +1,6 @@
 defmodule Words do
   def anagram?(first_word, second_word) do
-    chars(first_word) -- chars(second_word)
-    |> Enum.empty?
+    Enum.empty?(chars(first_word) -- chars(second_word))
   end
 
   defp chars(word) do
@@ -12,14 +11,14 @@ defmodule Words do
 
   def center([]), do: :ok
   def center(words) when is_list(words) do
-    max = max_length words
+    maximum = max_length words
     Enum.each words, fn(word) ->
-      IO.puts justify(word, max)
+      IO.puts justify(word, maximum)
     end
   end
 
-  defp justify(word, max) do
-    relative_length = div(max + String.length(word), 2)
+  defp justify(word, maximum) do
+    relative_length = div(maximum + String.length(word), 2)
     String.rjust(word, relative_length)
   end
 

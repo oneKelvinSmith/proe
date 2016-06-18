@@ -1,6 +1,6 @@
 defmodule Parse do
-  def number([ ?- | tail]), do: number_digits(tail, 0) * -1
-  def number([ ?+ | tail]), do: number_digits(tail, 0)
+  def number([?- | tail]), do: number_digits(tail, 0) * -1
+  def number([?+ | tail]), do: number_digits(tail, 0)
   def number(str),          do: number_digits(str, 0)
 
   defp number_digits([], value), do: value

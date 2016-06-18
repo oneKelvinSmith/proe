@@ -25,7 +25,7 @@ defmodule Countdown do
           {[inspect(count)], count - 1}
       end,
 
-      fn _ ->  end
+      fn _ -> nil end
     )
   end
 end

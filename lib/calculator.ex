@@ -1,6 +1,7 @@
 defmodule Calculator do
   def calculate(formula) when is_binary(formula) do
-    String.to_char_list(formula)
+    formula
+    |> String.to_char_list
     |> shunt([], [])
   end
 

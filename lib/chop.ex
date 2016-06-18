@@ -1,30 +1,30 @@
 defmodule Chop do
-  def guess(number, range = first..last) when first < last do
-    guess(number, middle(first, last), range)
+  def guess(n, range = first..last) when first < last do
+    guess(n, middle(first, last), range)
   end
 
-  def guess(number, first..last) do
-    guess(number, middle(last, first), last..first)
+  def guess(n, first..last) do
+    guess(n, middle(last, first), last..first)
   end
 
-  defp guess(number, guess, _) when number === guess do
-    print guess
-    guess
+  defp guess, g when n === g do
+    print g
+    g
   end
 
-  defp guess(number, guess, _..last) when div(number, guess) > 0 do
-    print guess
-    guess(number, middle(guess, last), guess..last)
+  defp guess(n, g, _..last) when div(n, g) > 0 do
+    print g
+    guess(n, middle(g, last), g..last)
   end
 
-  defp guess(number, guess, first.._) when div(number, guess) == 0 do
-    print guess
-    guess(number, middle(first, guess), first..guess)
+  defp guess(n, g, first.._) when div(n, g) == 0 do
+    print g
+    guess(n, middle(first, g), first..g)
   end
 
   defp middle(first, last) do
     first + div(last - first, 2)
   end
 
-  defp print(guess), do: IO.puts "Is it #{guess}?"
+  defp print(number), do: IO.puts "Is it #{number}?"
 end

@@ -1,5 +1,5 @@
 defmodule Canvas do
-  @defaults [ fg: "black", bg: "white", font: "Merriweather"]
+  @defaults [fg: "black", bg: "white", font: "Merriweather"]
 
   def draw_text(text, options \\ []) do
     options = Keyword.merge(@defaults, options)

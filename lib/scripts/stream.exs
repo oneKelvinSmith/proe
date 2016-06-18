@@ -5,6 +5,7 @@
 |> Enum.to_list
 |> IO.inspect
 
-File.stream!("/usr/share/dict/words")
+"/usr/share/dict/words"
+|> File.stream!
 |> Enum.max_by(&String.length/1)
 |> IO.puts

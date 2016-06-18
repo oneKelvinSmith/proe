@@ -1,14 +1,14 @@
 defmodule SalesTax do
   def calculate(orders, tax_rates) do
     for order <- orders do
-      case order do
+      rate = case order do
         [_, {:ship_to, :NC},  _] ->
           Keyword.get(tax_rates, :NC)
         [_, {:ship_to, :TX}, _] ->
           Keyword.get(tax_rates, :TX)
         otherwise -> 0
       end
-      |> set_total_amount(order)
+      set_total_amount(rate, order)
     end
   end
 
@@ -19,7 +19,8 @@ defmodule SalesTax do
   end
 
   def parse(filename, tax_rates) do
-    File.open!(filename)
+    filename
+    |> File.open!
     |> parse_contents
     |> calculate(tax_rates)
   end
@@ -32,7 +33,8 @@ defmodule SalesTax do
   end
 
   defp parse_headers(file) do
-    IO.read(file, :line)
+    file
+    |> IO.read(:line)
     |> parse_line(&String.to_atom/1)
   end
 
