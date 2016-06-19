@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :proe, key: :value
+#     config :hacking, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:proe, :key)
+#     Application.get_env(:hacking, :key)
 #
 # Or configure a 3rd-party app:
 #
