@@ -1,25 +1,22 @@
 defmodule Chop do
   def guess(n, range = first..last) when first < last do
-    guess(n, middle(first, last), range)
+    do_guess(n, middle(first, last), range)
   end
-
   def guess(n, first..last) do
-    guess(n, middle(last, first), last..first)
+    do_guess(n, middle(last, first), last..first)
   end
 
-  defp guess, g when n === g do
+  defp do_guess(n, g, _) when n === g do
     print g
     g
   end
-
-  defp guess(n, g, _..last) when div(n, g) > 0 do
+  defp do_guess(n, g, _..last) when div(n, g) > 0 do
     print g
-    guess(n, middle(g, last), g..last)
+    do_guess(n, middle(g, last), g..last)
   end
-
-  defp guess(n, g, first.._) when div(n, g) == 0 do
+  defp do_guess(n, g, first.._) when div(n, g) == 0 do
     print g
-    guess(n, middle(first, g), first..g)
+    do_guess(n, middle(first, g), first..g)
   end
 
   defp middle(first, last) do
