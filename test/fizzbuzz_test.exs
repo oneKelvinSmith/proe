@@ -24,4 +24,14 @@ defmodule FizzBuzzTest do
       FizzBuzz.upto(0)
     end
   end
+
+  test "upto_with_cond/1 behaves like upto/1" do
+    number = 15
+    assert FizzBuzz.upto(number) == FizzBuzz.upto_with_cond(number)
+  end
+
+  test "upto_with_case/1 behaves like upto/1" do
+    number = 15
+    assert FizzBuzz.upto(number) == FizzBuzz.upto_with_case(number)
+  end
 end
