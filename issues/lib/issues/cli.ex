@@ -1,5 +1,6 @@
 defmodule Issues.CLI do
   @default_count 4
+  @default_api Issues.GithubIssues.Github
 
   @moduledoc """
   Handle the command line parsing and the dispatch to
@@ -7,6 +8,7 @@ defmodule Issues.CLI do
   table of the last _n_ issues in a gihub project
   """
 
+  @doc "Entry point for CLI"
   def run(argv) do
     parse_args(argv)
   end
@@ -34,5 +36,18 @@ defmodule Issues.CLI do
       {_, [user, project], _} ->
         {user, project, @default_count}
     end
+  end
+
+  def process(query, options \\ [])
+
+  def process(:help, _options) do
+    IO.puts """
+    usage: issues <user> <project> [ count | #{@default_count} ]
+    """
+  end
+
+  def process({user, project, _count}, options) do
+    api = options[:api] || @default_api
+    api.fetch(user, project)
   end
 end

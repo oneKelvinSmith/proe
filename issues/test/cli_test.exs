@@ -2,7 +2,8 @@ defmodule CliTest do
   use ExUnit.Case
   doctest Issues
 
-  import Issues.CLI, only: [run: 1, parse_args: 1]
+  import Issues.CLI, only: [run: 1, parse_args: 1, process: 1, process: 2]
+  import ExUnit.CaptureIO
 
   test ":help returned by option parameters -h and --help options" do
     assert parse_args(["-h", "anything"]) == :help
@@ -20,5 +21,29 @@ defmodule CliTest do
   test "run calls parse_args" do
     args = ["user", "project"]
     assert run(args) == parse_args(args)
+  end
+
+  test "process outputs help text" do
+    assert capture_io(fn ->
+      process(:help)
+    end) == """
+    usage: issues <user> <project> [ count | 4 ]
+
+    """
+  end
+
+  test "process calls out the fetch api" do
+    defmodule TestAPI do
+      @behaviour Issues.GithubIssues
+
+      def fetch(user, project) do
+        send self(), %{user: user, project: project}
+        {:ok, %{}}
+      end
+    end
+
+    process({"oneKelvinSmith", "proe", 4}, api: TestAPI)
+
+    assert_received %{user: "oneKelvinSmith", project: "proe"}
   end
 end
