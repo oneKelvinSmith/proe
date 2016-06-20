@@ -7,6 +7,10 @@ defmodule Issues.CLI do
   table of the last _n_ issues in a gihub project
   """
 
+  def run(argv) do
+    parse_args(argv)
+  end
+
   @doc """
   `argv` can be -h or --help, which returns :help.
 
