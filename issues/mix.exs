@@ -28,7 +28,8 @@ defmodule Issues.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:credo, "~> 0.4", only: [:dev, :test]}
+      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:httpoison, "~> 0.8"}
     ]
   end
 end
