@@ -12,7 +12,7 @@ defmodule Calculator do
       token when token in '0123456789' ->
         {new_tail, number} = pop_number(tokens, 0)
         shunt(new_tail, operators, [number | numbers])
-      token ->
+      _token ->
         shunt(tail, operators, numbers)
     end
   end

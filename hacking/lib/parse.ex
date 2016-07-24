@@ -14,5 +14,5 @@ defmodule Parse do
   def ascii?([]), do: false
   def ascii?([head | _])    when head > 127,  do: false
   def ascii?([_ | []]),                       do: true
-  def ascii?([head | tail]),                  do: ascii?(tail)
+  def ascii?([_head | tail]),                 do: ascii?(tail)
 end

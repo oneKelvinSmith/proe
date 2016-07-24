@@ -6,7 +6,7 @@ defmodule SalesTax do
           Keyword.get(tax_rates, :NC)
         [_, {:ship_to, :TX}, _] ->
           Keyword.get(tax_rates, :TX)
-        otherwise -> 0
+        _otherwise -> 0
       end
       set_total_amount(rate, order)
     end

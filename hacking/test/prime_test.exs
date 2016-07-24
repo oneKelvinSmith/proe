@@ -1,7 +1,7 @@
 defmodule PrimeTest do
   use ExUnit.Case
 
-  test "upto/1 should return all prime numbers upto given integer" do
+  test "upto/1 should return all prime numbers upto 2" do
     assert Prime.upto(2) == [2]
   end
 
