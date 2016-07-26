@@ -5,6 +5,7 @@ defmodule GithubTest do
   import Issues.GithubIssues.Github, only: [fetch: 2, issues_url: 2, handle_response: 1]
   import ExUnit.CaptureIO
 
+  @tag :httpoison
   describe "fetch/2" do
     setup do
       HTTPoison.start
