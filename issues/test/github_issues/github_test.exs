@@ -2,17 +2,23 @@ defmodule GithubTest do
   use ExUnit.Case
   doctest Issues
 
-  import Issues.GithubIssues.Github, only: [issues_url: 2, handle_response: 1]
+  import Issues.GithubIssues.Github, only: [fetch: 2, issues_url: 2, handle_response: 1]
   import ExUnit.CaptureIO
 
   describe "fetch/2" do
+    setup do
+      HTTPoison.start
+      :ok
+    end
+
     test "returns the cleaned up response from HTTPoison get" do
+      assert fetch("oneKelvinSmith", "proe") == {:ok, "[]"}
     end
   end
 
   describe "issues_url/2" do
     test "returns the https github url for the given user and project" do
-      expected_url = "https://github.com/oneKelvinSmith/proe/issues"
+      expected_url = "https://api.github.com/repos/oneKelvinSmith/proe/issues"
       assert issues_url("oneKelvinSmith", "proe") == expected_url
     end
   end

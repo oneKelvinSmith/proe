@@ -1,8 +1,16 @@
 defmodule Issues.GithubIssues.Github do
   @behaviour Issues.GithubIssues
 
+  @user_agent [ {"User-agent", "github@example.com"} ]
+
+  def fetch(user, project) do
+    issues_url(user, project)
+    |> HTTPoison.get(@user_agent)
+    |> handle_response
+  end
+
   def issues_url(user, project) do
-    "https://github.com/#{user}/#{project}/issues"
+    "https://api.github.com/repos/#{user}/#{project}/issues"
   end
 
   def handle_response({:ok, %{status_code: 200, body: body}}) do
