@@ -28,7 +28,7 @@ defmodule CliTest do
   end
 
   describe "process/1" do
-    test "process outputs help text" do
+    test "outputs help text" do
       assert capture_io(fn ->
         process(:help)
       end) == """
@@ -39,19 +39,39 @@ defmodule CliTest do
   end
 
   describe "process/2" do
-    test "process calls out the fetch api" do
-      defmodule TestAPI do
-        @behaviour Issues.GithubIssues
+    defmodule OkAPI do
+      @behaviour Issues.GithubIssues
 
-        def fetch(user, project) do
-          send self(), %{user: user, project: project}
-          {:ok, %{}}
-        end
+      def fetch(user, project) do
+        send self(), %{user: user, project: project}
+        {:ok, %{"body" => "Success"}}
       end
+    end
 
-      process({"oneKelvinSmith", "proe", 4}, api: TestAPI)
+    test "calls out the fetch api" do
+      process({"oneKelvinSmith", "proe", 4}, api: OkAPI)
 
       assert_received %{user: "oneKelvinSmith", project: "proe"}
+    end
+
+    test "returns body on successful fetch" do
+      assert process(
+        {"oneKelvinSmith", "proe", 4}, api: OkAPI
+      ) == %{"body" => "Success"}
+    end
+
+    defmodule ErrorAPI do
+      @behaviour Issues.GithubIssues
+
+      def fetch(_user, _project) do
+        {:error, %{"message" => "Madness has occurred"}}
+      end
+    end
+
+    test "handles error case gracefully" do
+      assert capture_io(fn ->
+        process({"irrelevant", "project", 42}, api: ErrorAPI)
+      end) == "Error fetching from Github: Madness has occurred\n"
     end
   end
 end

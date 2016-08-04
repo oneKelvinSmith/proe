@@ -49,5 +49,13 @@ defmodule Issues.CLI do
   def process({user, project, _count}, options) do
     api = options[:api] || @default_api
     api.fetch(user, project)
+    |> decode_response
+  end
+
+  def decode_response({:ok, body}), do: body
+
+  def decode_response({:error, error}) do
+    message = error["message"]
+    IO.puts "Error fetching from Github: #{message}"
   end
 end
