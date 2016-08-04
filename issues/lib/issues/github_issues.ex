@@ -9,5 +9,5 @@ defmodule Issues.GithubIssues do
   @doc """
   Fetches issues for a given `user`'s '`project`.
   """
-  @callback fetch(user :: String.t, project :: String.t) :: {:ok, term} | {:error, term}
+  @callback fetch(user :: user, project :: project) :: {:ok, term} | {:error, term}
 end

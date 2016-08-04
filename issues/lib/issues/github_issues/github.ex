@@ -1,7 +1,11 @@
 defmodule Issues.GithubIssues.Github do
+  @moduledoc """
+  Implimentation for the GithubIssues Github api.
+  """
+
   @behaviour Issues.GithubIssues
 
-  @user_agent [ {"User-agent", "github@example.com"} ]
+  @user_agent [{"User-agent", "github@example.com"}]
 
   def fetch(user, project) do
     issues_url(user, project)
