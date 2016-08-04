@@ -25,13 +25,13 @@ defmodule GithubTest do
 
   describe "handle_response/1" do
     test "returns the body of a successful response as on :ok tuple" do
-      response = {:ok, %{status_code: 200, body: "body"}}
-      assert handle_response(response) == {:ok, "body"}
+      response = {:ok, %{status_code: 200, body: "[{\"key\":\"value\"}]"}}
+      assert handle_response(response) == {:ok, [%{"key" => "value"}]}
     end
 
     test "returns the body of an unsuccessful response as on :error tuple" do
-      response = {:anything, %{status_code: 999, body: "body"}}
-      assert handle_response(response) == {:error, "body"}
+      response = {:anything, %{status_code: 999, body: "[{\"key\":\"value\"}]"}}
+      assert handle_response(response) == {:error, [%{"key" => "value"}]}
     end
   end
 end

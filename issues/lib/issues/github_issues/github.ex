@@ -18,10 +18,14 @@ defmodule Issues.GithubIssues.Github do
   end
 
   def handle_response({:ok, %{status_code: 200, body: body}}) do
-    {:ok, body}
+    {:ok, parse_json(body)}
   end
 
   def handle_response({_, %{status_code: _, body: body}}) do
-    {:error, body}
+    {:error, parse_json(body)}
+  end
+
+  def parse_json(body) do
+    Poison.Parser.parse!(body)
   end
 end
