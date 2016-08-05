@@ -53,6 +53,7 @@ defmodule Issues.CLI do
 
     api.fetch(user, project)
     |> decode_response(system)
+    |> sort_into_ascending_order
     |> Enum.take(count)
   end
 
