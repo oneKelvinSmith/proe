@@ -1,6 +1,7 @@
 defmodule Issues.CLI do
-  @default_count 4
-  @default_api Issues.GithubIssues.Github
+  @count  4
+  @api    Issues.GithubIssues.Github
+  @system System
 
   @moduledoc """
   Handle the command line parsing and the dispatch to
@@ -34,7 +35,7 @@ defmodule Issues.CLI do
       {_, [user, project, count], _} ->
         {user, project, String.to_integer(count)}
       {_, [user, project], _} ->
-        {user, project, @default_count}
+        {user, project, @count}
     end
   end
 
@@ -42,20 +43,23 @@ defmodule Issues.CLI do
 
   def process(:help, _options) do
     IO.puts """
-    usage: issues <user> <project> [ count | #{@default_count} ]
+    usage: issues <user> <project> [ count | #{@count} ]
     """
   end
 
   def process({user, project, _count}, options) do
-    api = options[:api] || @default_api
+    api    = options[:api]    || @api
+    system = options[:system] || @system
+
     api.fetch(user, project)
-    |> decode_response
+    |> decode_response(system)
   end
 
-  def decode_response({:ok, body}), do: body
+  def decode_response({:ok, body}, _system), do: body
 
-  def decode_response({:error, error}) do
+  def decode_response({:error, error}, system) do
     message = error["message"]
     IO.puts "Error fetching from Github: #{message}"
+    system.halt(2)
   end
 end

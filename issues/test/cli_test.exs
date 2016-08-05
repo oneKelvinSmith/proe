@@ -39,28 +39,34 @@ defmodule CliTest do
   end
 
   describe "process/2" do
-    defmodule OkAPI do
+    defmodule APIStub do
       @behaviour Issues.GithubIssues
 
       def fetch(user, project) do
-        send self(), %{user: user, project: project}
+        send self, %{user: user, project: project}
         {:ok, %{"body" => "Success"}}
       end
     end
 
     test "calls out the fetch api" do
-      process({"oneKelvinSmith", "proe", 4}, api: OkAPI)
+      process({"oneKelvinSmith", "proe", 4}, api: APIStub)
 
       assert_received %{user: "oneKelvinSmith", project: "proe"}
     end
 
     test "returns body on successful fetch" do
       assert process(
-        {"oneKelvinSmith", "proe", 4}, api: OkAPI
+        {"oneKelvinSmith", "proe", 4}, api: APIStub
       ) == %{"body" => "Success"}
     end
 
-    defmodule ErrorAPI do
+    defmodule SystemStub do
+      def halt(exit_code) do
+        send self, %{exit_code: exit_code}
+      end
+    end
+
+    defmodule BrokenAPIStub do
       @behaviour Issues.GithubIssues
 
       def fetch(_user, _project) do
@@ -70,8 +76,24 @@ defmodule CliTest do
 
     test "handles error case gracefully" do
       assert capture_io(fn ->
-        process({"irrelevant", "project", 42}, api: ErrorAPI)
+        process(
+          {"irrelevant", "project", 42},
+          api: BrokenAPIStub,
+          system: SystemStub
+        )
       end) == "Error fetching from Github: Madness has occurred\n"
+    end
+
+    test "halts the system on error" do
+      capture_io(fn ->
+        process(
+          {"irrelevant", "project", 42},
+          api: BrokenAPIStub,
+          system: SystemStub
+        )
+      end)
+
+      assert_received %{exit_code: 2}
     end
   end
 end
