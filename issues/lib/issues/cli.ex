@@ -62,4 +62,8 @@ defmodule Issues.CLI do
     IO.puts "Error fetching from Github: #{message}"
     system.halt(2)
   end
+
+  def sort_into_ascending_order(issues) do
+    Enum.sort issues, &(&1["created_at"] <= &2["created_at"])
+  end
 end

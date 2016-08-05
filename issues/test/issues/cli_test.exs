@@ -2,8 +2,14 @@ defmodule Issues.CliTest do
   use ExUnit.Case
   doctest Issues
 
-  import Issues.CLI, only: [run: 1, parse_args: 1, process: 1, process: 2]
   import ExUnit.CaptureIO
+  import Issues.CLI, only: [
+    run: 1,
+    parse_args: 1,
+    process: 1,
+    process: 2,
+    sort_into_ascending_order: 1
+  ]
 
   describe "parse_args/1" do
     test ":help returned by option parameters -h and --help options" do
@@ -94,6 +100,25 @@ defmodule Issues.CliTest do
       end)
 
       assert_received %{exit_code: 2}
+    end
+  end
+
+  describe "sort_into_ascending_order/1" do
+    test "sorts in ascending order correctly" do
+      expected = ["c", "a", "b"]
+      |> fake_issues
+      |> sort_into_ascending_order
+      |> values
+
+      assert expected == ~w{a b c}
+    end
+
+    defp values(issues) do
+      for issue <- issues, do: issue["created_at"]
+    end
+
+    defp fake_issues(values) do
+      for value <- values, do: %{"created_at" => value, "other" => "data"}
     end
   end
 end
