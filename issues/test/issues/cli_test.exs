@@ -1,42 +1,36 @@
-defmodule Issues.CliTest do
+defmodule Issues.CLITest do
   use ExUnit.Case
+  import ExUnit.CaptureIO
   doctest Issues
 
-  import ExUnit.CaptureIO
-  import Issues.CLI, only: [
-    run: 1,
-    parse_args: 1,
-    process: 1,
-    process: 2,
-    sort_into_ascending_order: 1
-  ]
+  alias Issues.CLI, as: CLI
 
   describe "parse_args/1" do
     test ":help returned by option parameters -h and --help options" do
-      assert parse_args(["-h", "anything"]) == :help
-      assert parse_args(["--help", "anything"]) == :help
+      assert CLI.parse_args(["-h", "anything"]) == :help
+      assert CLI.parse_args(["--help", "anything"]) == :help
     end
 
     test "three values returned if three given" do
-      assert parse_args(["user", "project", "99"]) == {"user", "project", 99}
+      assert CLI.parse_args(["user", "project", "99"]) == {"user", "project", 99}
     end
 
     test "count is defaulted if two values given" do
-      assert parse_args(["user", "project"]) == {"user", "project", 4}
+      assert CLI.parse_args(["user", "project"]) == {"user", "project", 4}
     end
   end
 
   describe "run/1" do
-    test "run calls parse_args" do
+    test "run calls CLI.parse_args" do
       args = ["user", "project"]
-      assert run(args) == parse_args(args)
+      assert CLI.run(args) == CLI.parse_args(args)
     end
   end
 
   describe "process/1" do
     test "outputs help text" do
       assert capture_io(fn ->
-        process(:help)
+        CLI.process(:help)
       end) == """
       usage: issues <user> <project> [ count | 4 ]
 
@@ -55,13 +49,13 @@ defmodule Issues.CliTest do
     end
 
     test "calls out the fetch api" do
-      process({"user", "project", 4}, api: APIStub)
+      CLI.process({"user", "project", 4}, api: APIStub)
 
       assert_received %{user: "user", project: "project"}
     end
 
     test "returns body on successful fetch" do
-      expected = process({"user", "project", 4}, api: APIStub)
+      expected = CLI.process({"user", "project", 4}, api: APIStub)
 
       assert expected == [%{"created_at" => "now", "other" => "data"}]
     end
@@ -82,7 +76,7 @@ defmodule Issues.CliTest do
 
     test "handles error case gracefully" do
       assert capture_io(fn ->
-        process(
+        CLI.process(
           {"irrelevant", "project", 42},
           api: BrokenAPIStub,
           system: SystemStub
@@ -92,7 +86,7 @@ defmodule Issues.CliTest do
 
     test "halts the system on error" do
       capture_io(fn ->
-        process(
+        CLI.process(
           {"irrelevant", "project", 42},
           api: BrokenAPIStub,
           system: SystemStub
@@ -119,7 +113,7 @@ defmodule Issues.CliTest do
 
     test "returns the expected number of issues" do
       expected_count = {"onekelvinsmith", "project", 4}
-      |> process(api: ManyIssuesAPIStub)
+      |> CLI.process(api: ManyIssuesAPIStub)
       |> Enum.count
 
       assert expected_count == 4
@@ -130,7 +124,7 @@ defmodule Issues.CliTest do
     test "sorts in ascending order correctly" do
       expected = ["c", "a", "b"]
       |> fake_issues
-      |> sort_into_ascending_order
+      |> CLI.sort_into_ascending_order
       |> values
 
       assert expected == ~w{a b c}
