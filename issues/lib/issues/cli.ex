@@ -47,12 +47,13 @@ defmodule Issues.CLI do
     """
   end
 
-  def process({user, project, _count}, options) do
+  def process({user, project, count}, options) do
     api    = options[:api]    || @api
     system = options[:system] || @system
 
     api.fetch(user, project)
     |> decode_response(system)
+    |> Enum.take(count)
   end
 
   def decode_response({:ok, body}, _system), do: body

@@ -50,20 +50,20 @@ defmodule Issues.CliTest do
 
       def fetch(user, project) do
         send self, %{user: user, project: project}
-        {:ok, %{"body" => "Success"}}
+        {:ok, [%{"created_at" => "now", "other" => "data"}]}
       end
     end
 
     test "calls out the fetch api" do
-      process({"oneKelvinSmith", "proe", 4}, api: APIStub)
+      process({"user", "project", 4}, api: APIStub)
 
-      assert_received %{user: "oneKelvinSmith", project: "proe"}
+      assert_received %{user: "user", project: "project"}
     end
 
     test "returns body on successful fetch" do
-      assert process(
-        {"oneKelvinSmith", "proe", 4}, api: APIStub
-      ) == %{"body" => "Success"}
+      expected = process({"user", "project", 4}, api: APIStub)
+
+      assert expected == [%{"created_at" => "now", "other" => "data"}]
     end
 
     defmodule SystemStub do
@@ -100,6 +100,29 @@ defmodule Issues.CliTest do
       end)
 
       assert_received %{exit_code: 2}
+    end
+
+    defmodule ManyIssuesAPIStub do
+      @behaviour Issues.GithubIssues
+
+      def fetch(_user, _project) do
+        {:ok, [
+            %{"created_at" => "0001-01-01T01:01:01Z"},
+            %{"created_at" => "0002-02-02T02:02:02Z"},
+            %{"created_at" => "0003-03-03T03:03:03Z"},
+            %{"created_at" => "0004-04-04T04:04:04Z"},
+            %{"created_at" => "0005-05-05T05:05:05Z"},
+            %{"created_at" => "0006-06-06T06:06:06Z"}
+          ]}
+      end
+    end
+
+    test "returns the expected number of issues" do
+      expected_count = {"onekelvinsmith", "project", 4}
+      |> process(api: ManyIssuesAPIStub)
+      |> Enum.count
+
+      assert expected_count == 4
     end
   end
 
