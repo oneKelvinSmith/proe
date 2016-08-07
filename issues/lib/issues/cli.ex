@@ -12,8 +12,10 @@ defmodule Issues.CLI do
   """
 
   @doc "Entry point for CLI"
-  def run(argv) do
-    parse_args(argv)
+  def main(argv) do
+    argv
+    |> parse_args
+    |> process
   end
 
   @doc """

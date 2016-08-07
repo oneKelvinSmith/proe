@@ -20,13 +20,6 @@ defmodule Issues.CLITest do
     end
   end
 
-  describe "run/1" do
-    test "run calls CLI.parse_args" do
-      args = ["user", "project"]
-      assert CLI.run(args) == CLI.parse_args(args)
-    end
-  end
-
   describe "process/1" do
     test "outputs help text" do
       assert capture_io(fn ->

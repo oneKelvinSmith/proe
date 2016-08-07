@@ -7,3 +7,4 @@ erl_crash.dump
 *.beam
 .DS_store
 */**/.DS_store
+issues
