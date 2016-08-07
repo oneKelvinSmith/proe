@@ -1,10 +1,9 @@
 /_build
 /cover
 /deps
+/doc
 erl_crash.dump
 *.ez
-*/**/*.beam
 *.beam
-.DS_store
-*/**/.DS_store
+.DS_Store
 issues
