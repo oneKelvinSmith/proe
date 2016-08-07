@@ -1,13 +1,14 @@
 defmodule Issues.TableFormatter do
-  import Enum, only: [ each: 2, map: 2, map_join: 3, max: 1 ]
+  import Enum, only: [each: 2, map: 2, map_join: 3, max: 1, zip: 2]
 
   def print_table_for_columns(rows, headers) do
-    with data_by_columns = split_into_columns(rows, headers),
-         column_widths   = widths_of(data_by_columns),
-         format          = format_for(column_widths)
+    with data_by_columns    = split_into_columns(rows, headers),
+         headers_and_data   = headers_and_data(headers, data_by_columns),
+         column_widths      = widths_of(headers_and_data),
+         format             = format_for(column_widths)
     do
          puts_one_line_in_columns(headers, format)
-         puts_separator(column_widths)
+         IO.puts(separator(column_widths))
          puts_in_columns(data_by_columns, format)
     end
   end
@@ -21,24 +22,21 @@ defmodule Issues.TableFormatter do
   def printable(str) when is_binary(str), do: str
   def printable(str), do: to_string(str)
 
+  def headers_and_data(headers, data) do
+    zip(headers, data)
+    |> map(fn {header, datum} -> [printable(header) | datum] end)
+  end
+
   def widths_of(columns) do
     for column <- columns, do: column |> map(&String.length/1) |> max
   end
 
   def format_for(column_widths) do
-    format column_widths, " | ", fn width -> "~-#{width}s" end
+    map_join(column_widths, " | ", fn width -> "~-#{width}s" end) <> "~n"
   end
 
   def separator(column_widths) do
-    format column_widths, "-+-", fn width -> List.duplicate("-", width) end
-  end
-
-  def format(column_widths, separator, filler) do
-    map_join(column_widths, separator, filler) |> surround
-  end
-
-  def surround(format) do
-    "|" <> format <> "|~n"
+    map_join(column_widths, "-+-", fn width -> List.duplicate("-", width) end)
   end
 
   def puts_in_columns(data_by_columns, format) do
@@ -50,9 +48,5 @@ defmodule Issues.TableFormatter do
 
   def puts_one_line_in_columns(fields, format) do
     :io.format(format, fields)
-  end
-
-  def puts_separator(column_widths) do
-    separator(column_widths) |> :io.format
   end
 end

@@ -44,25 +44,35 @@ defmodule Issues.CLITest do
 
       def fetch(user, project) do
         send self, %{user: user, project: project}
-        {:ok, [%{"created_at" => "now", "other" => "data"}]}
+        body = [
+          %{"number" => "42", "created_at" => "0042-42-42", "title" => "Issue42"}
+        ]
+        {:ok, body}
       end
     end
 
     test "calls out the fetch api" do
-      CLI.process({"user", "project", 4}, api: APIStub)
+      capture_io(fn ->
+        CLI.process({"user", "project", 4}, api: APIStub)
+      end)
 
       assert_received %{user: "user", project: "project"}
     end
 
     test "returns body on successful fetch" do
-      expected = CLI.process({"user", "project", 4}, api: APIStub)
-
-      assert expected == [%{"created_at" => "now", "other" => "data"}]
+      assert capture_io(fn ->
+        CLI.process({"user", "project", 4}, api: APIStub)
+      end) == """
+      number | created_at | title\s\s
+      -------+------------+--------
+      42     | 0042-42-42 | Issue42
+      """
     end
 
     defmodule SystemStub do
       def halt(exit_code) do
         send self, %{exit_code: exit_code}
+        exit(:normal)
       end
     end
 
@@ -76,20 +86,24 @@ defmodule Issues.CLITest do
 
     test "handles error case gracefully" do
       assert capture_io(fn ->
-        CLI.process(
-          {"irrelevant", "project", 42},
-          api: BrokenAPIStub,
-          system: SystemStub
+        catch_exit(
+          CLI.process(
+            {"irrelevant", "project", 42},
+            api: BrokenAPIStub,
+            system: SystemStub
+          )
         )
       end) == "Error fetching from Github: Madness has occurred\n"
     end
 
     test "halts the system on error" do
       capture_io(fn ->
-        CLI.process(
-          {"irrelevant", "project", 42},
-          api: BrokenAPIStub,
-          system: SystemStub
+        catch_exit(
+          CLI.process(
+            {"irrelevant", "project", 42},
+            api: BrokenAPIStub,
+            system: SystemStub
+          )
         )
       end)
 
@@ -100,23 +114,28 @@ defmodule Issues.CLITest do
       @behaviour Issues.GithubIssues
 
       def fetch(_user, _project) do
-        {:ok, [
-            %{"created_at" => "0001-01-01T01:01:01Z"},
-            %{"created_at" => "0002-02-02T02:02:02Z"},
-            %{"created_at" => "0003-03-03T03:03:03Z"},
-            %{"created_at" => "0004-04-04T04:04:04Z"},
-            %{"created_at" => "0005-05-05T05:05:05Z"},
-            %{"created_at" => "0006-06-06T06:06:06Z"}
-          ]}
+        body = [
+          %{"number" => "1", "created_at" => "0001-01-01", "title" => "Issue1"},
+          %{"number" => "2", "created_at" => "0002-02-02", "title" => "Issue2"},
+          %{"number" => "3", "created_at" => "0003-03-03", "title" => "Issue3"},
+          %{"number" => "4", "created_at" => "0004-04-04", "title" => "Issue4"},
+          %{"number" => "5", "created_at" => "0005-05-05", "title" => "Issue5"},
+        ]
+        {:ok, body}
       end
     end
 
     test "returns the expected number of issues" do
-      expected_count = {"onekelvinsmith", "project", 4}
-      |> CLI.process(api: ManyIssuesAPIStub)
-      |> Enum.count
-
-      assert expected_count == 4
+      assert capture_io(fn ->
+        CLI.process({"user", "project", 4}, api: ManyIssuesAPIStub)
+      end) == """
+      number | created_at | title\s
+      -------+------------+-------
+      1      | 0001-01-01 | Issue1
+      2      | 0002-02-02 | Issue2
+      3      | 0003-03-03 | Issue3
+      4      | 0004-04-04 | Issue4
+      """
     end
   end
 
