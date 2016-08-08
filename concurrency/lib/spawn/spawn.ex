@@ -1,4 +1,4 @@
-defmodule Spawn1 do
+defmodule Spawn do
   def greet do
     receive do
       {sender, message} ->
