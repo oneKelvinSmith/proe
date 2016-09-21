@@ -12,19 +12,25 @@ defmodule Sleeper do
   end
 
   def link do
-    Process.flag(:trap_exit, true)
-
-    child = spawn_link(Sleeper, :a_simple_death, [self])
-
-    sleep 500
-
-    listen(child)
+    run(&spawn_link/3, :a_simple_death)
   end
 
   def link_with_exception do
+    run(&spawn_link/3, :a_blaze_of_glory)
+  end
+
+  def monitor do
+    run(&spawn_monitor/3, :a_simple_death)
+  end
+
+  def monitor_with_exception do
+    run(&spawn_monitor/3, :a_blaze_of_glory)
+  end
+
+  def run(spawner, child_function) do
     Process.flag(:trap_exit, true)
 
-    child = spawn_link(Sleeper, :a_blaze_of_glory, [self])
+    child = spawner.(Sleeper, child_function, [self])
 
     sleep 500
 
