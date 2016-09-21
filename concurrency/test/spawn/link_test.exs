@@ -17,7 +17,7 @@ defmodule LinkTest do
     assert capture_io(fn ->
       Link.run_with_link
     end) == """
-    MESSAGE RECEIVED: :boom
+    MESSAGE RECEIVED: {:EXIT, :boom}
     """
 
     Process.flag(:trap_exit, trap)
@@ -27,7 +27,7 @@ defmodule LinkTest do
     assert capture_io(fn ->
       Link.run_with_trap
     end) == """
-    MESSAGE RECEIVED: :boom
+    MESSAGE RECEIVED: {:EXIT, :boom}
     """
   end
 end

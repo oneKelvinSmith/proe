@@ -10,7 +10,7 @@ defmodule Link do
     spawn(Link, :sad_function, [])
     receive do
       {:EXIT, _pid, message} ->
-        IO.puts "MESSAGE RECEIVED: #{inspect message}"
+        IO.puts "MESSAGE RECEIVED: #{inspect {:EXIT, message}}"
     after 1000 ->
         IO.puts "Nothing happened as far as I am concerned"
     end
@@ -20,7 +20,7 @@ defmodule Link do
     spawn_link(Link, :sad_function, [])
     receive do
       {:EXIT, _pid, message} ->
-        IO.puts "MESSAGE RECEIVED: #{inspect message}"
+        IO.puts "MESSAGE RECEIVED: #{inspect {:EXIT, message}}"
     after 1000 ->
         IO.puts "Nothing happened as far as I am concerned"
     end
@@ -31,7 +31,7 @@ defmodule Link do
     spawn_link(Link, :sad_function, [])
     receive do
       {:EXIT, _pid, message} ->
-        IO.puts "MESSAGE RECEIVED: #{inspect message}"
+        IO.puts "MESSAGE RECEIVED: #{inspect {:EXIT, message}}"
     after 1000 ->
         IO.puts "Nothing happened as far as I am concerned"
     end
