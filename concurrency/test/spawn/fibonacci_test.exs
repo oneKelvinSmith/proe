@@ -16,9 +16,31 @@ defmodule FibonacciTest do
         {:answer, number, result, ^solver} ->
           assert number == 10
           assert result == 55
-        :else ->
+        :failure ->
           flunk "does not use scheduler appropriately"
       end
+    end
+
+    test "exits when asked to shutdown" do
+      trap = Process.flag(:trap_exit, true)
+
+      solver = spawn_link Fibonacci, :solve, [self]
+
+      receive do
+        {:ready, pid} ->
+          assert pid == solver
+      end
+
+      send solver, {:shutdown}
+
+      receive do
+        {:EXIT, ^solver, exit_type} ->
+          assert exit_type == :normal
+        :failure ->
+          flunk "does not exit as expected"
+      end
+
+      Process.flag(:trap_exit, trap)
     end
   end
 end
