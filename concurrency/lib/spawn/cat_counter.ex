@@ -3,11 +3,9 @@ defmodule CatCounter do
     file
     |> File.read!
     |> String.split
-    |> Enum.filter(&contains_cat/1)
-    |> Enum.count
-  end
-
-  defp contains_cat(word) do
-    String.match? word, ~r/cat/
+    |> Enum.reduce(0, fn
+      ("cat", acc) -> acc + 1
+      (_word, acc) -> acc
+    end)
   end
 end
