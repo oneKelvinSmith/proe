@@ -1,23 +1,37 @@
 defmodule TickerTest do
   use ExUnit.Case
 
-  test "registers the given client pid" do
+  test "registers a given client to receive ticks" do
+    test = self
+
+    Ticker.start
+    Ticker.register(test)
+
+    Process.sleep 1_000
+
+    assert_receive {:tick}
+  end
+
+  test "registers multiple clients to receive ticks" do
     test = self
 
     Ticker.start
 
-    receiver = spawn fn ->
+    receiver = fn ->
       receive do
-        {:tick} -> send test, :pass
-        _       -> send test, :fail
+        {:tick} -> send test, {:ticked, self}
       end
     end
 
-    Ticker.register(receiver)
+    first = spawn receiver
+    second = spawn receiver
+
+    Ticker.register(first)
+    Ticker.register(second)
 
     Process.sleep 1_000
 
-    assert_receive :pass
-    refute_receive :fail
+    assert_receive {:ticked, first}
+    assert_receive {:ticked, second}
   end
 end
