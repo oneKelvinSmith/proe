@@ -2,6 +2,8 @@ defmodule Ticker do
   @interval 1_000
   @name :ticker
 
+  def interval, do: @interval
+
   def start do
     pid = spawn(__MODULE__, :generator, [[]])
     :global.register_name(@name, pid)

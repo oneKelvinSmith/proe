@@ -1,6 +1,12 @@
 defmodule TickerTest do
   use ExUnit.Case
 
+  describe "interval/0" do
+    test "is one second" do
+      assert Ticker.interval == 1_000
+    end
+  end
+
   describe "start/0" do
     test "registers the ticker globally" do
       Ticker.start
@@ -16,9 +22,7 @@ defmodule TickerTest do
       Ticker.start
       Ticker.register(test)
 
-      Process.sleep 1_000
-
-      assert_receive {:tick}
+      assert_receive {:tick}, Ticker.interval + 10
     end
 
     test "registers multiple clients to receive ticks" do
@@ -32,16 +36,16 @@ defmodule TickerTest do
         end
       end
 
-      first = spawn receiver
-      second = spawn receiver
+      first = spawn(receiver)
+      second = spawn(receiver)
 
       Ticker.register(first)
       Ticker.register(second)
 
-      Process.sleep 1_000
+      timeout = Ticker.interval + 10
 
-      assert_receive {:ticked, first}
-      assert_receive {:ticked, second}
+      assert_receive {:ticked, ^first}, timeout
+      assert_receive {:ticked, ^second}, timeout
     end
   end
 end
