@@ -3,14 +3,14 @@ defmodule FibonacciTest do
 
   describe "solve/1" do
     test "uses a scheduler to generate a fibonnaci sequence" do
-      solver = spawn Fibonacci, :solve, [self]
+      solver = spawn Fibonacci, :solve, [self()]
 
       receive do
         {:ready, pid} ->
           assert pid == solver
       end
 
-      send solver, {:fib, 10, self}
+      send solver, {:fib, 10, self()}
 
       receive do
         {:answer, number, result, ^solver} ->
@@ -24,7 +24,7 @@ defmodule FibonacciTest do
     test "exits when asked to shutdown" do
       trap = Process.flag(:trap_exit, true)
 
-      solver = spawn_link Fibonacci, :solve, [self]
+      solver = spawn_link Fibonacci, :solve, [self()]
 
       receive do
         {:ready, pid} ->

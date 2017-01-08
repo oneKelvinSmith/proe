@@ -1,9 +1,9 @@
 defmodule Fibonacci do
   def solve(scheduler) do
-    send scheduler, {:ready, self}
+    send scheduler, {:ready, self()}
     receive do
       {:fib, n, client} ->
-        send client, {:answer, n, calculate(n), self}
+        send client, {:answer, n, calculate(n), self()}
         solve(scheduler)
       {:shutdown} ->
         exit :normal

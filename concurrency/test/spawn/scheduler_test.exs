@@ -3,10 +3,10 @@ defmodule SchedulerTest do
 
   defmodule Tester do
     def function(scheduler) do
-      send scheduler, {:ready, self}
+      send scheduler, {:ready, self()}
       receive do
         {:fib, number, client} ->
-          send client, {:answer, number, self, self}
+          send client, {:answer, number, self(), self()}
           function(scheduler)
         {:shutdown} ->
           exit :normal

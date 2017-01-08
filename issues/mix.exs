@@ -5,7 +5,7 @@ defmodule Issues.Mixfile do
     [app: :issues,
      escript: escript_config,
      version: "0.0.1",
-     elixir: "~> 1.2",
+     elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
@@ -17,7 +17,7 @@ defmodule Issues.Mixfile do
 
   defp deps do
     [
-      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:credo, "~> 0.5", only: [:dev, :test]},
       {:httpoison, "~> 0.9"},
       {:poison, "~> 2.0"}
     ]

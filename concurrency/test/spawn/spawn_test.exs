@@ -5,7 +5,7 @@ defmodule SpawnTest do
   test "greets from another process" do
     pid = spawn(Spawn, :greet, [])
 
-    send pid, {self, "World!"}
+    send pid, {self(), "World!"}
 
     greeting = capture_io(fn ->
       receive do
@@ -21,13 +21,13 @@ defmodule SpawnTest do
   test "greets multiple times" do
     pid = spawn(Spawn, :greet, [])
 
-    send pid, {self, "World!"}
+    send pid, {self(), "World!"}
 
     receive do
       {:ok, _message} -> :ignore
     end
 
-    send pid, {self, "Kermit!"}
+    send pid, {self(), "Kermit!"}
 
     greeting = capture_io(fn ->
       receive do

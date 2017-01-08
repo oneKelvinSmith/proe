@@ -2,12 +2,12 @@ defmodule Sleeper do
   import :timer, only: [ sleep: 1 ]
 
   def a_simple_death(parent) do
-    send parent, {self, :death_is_imminent}
+    send parent, {self(), :death_is_imminent}
     exit :death
   end
 
   def a_blaze_of_glory(parent) do
-    send parent, {self, :not_going_quietly}
+    send parent, {self(), :not_going_quietly}
     raise "the_flames_of_legacy"
   end
 
@@ -30,7 +30,7 @@ defmodule Sleeper do
   def run(spawner, child_function) do
     Process.flag(:trap_exit, true)
 
-    child = spawner.(Sleeper, child_function, [self])
+    child = spawner.(Sleeper, child_function, [self()])
 
     sleep 500
 

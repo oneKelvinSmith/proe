@@ -6,7 +6,7 @@ defmodule Chain do
   end
 
   def create_processes(n) do
-    last = Enum.reduce 1..n, self, fn (_, send_to) ->
+    last = Enum.reduce 1..n, self(), fn (_, send_to) ->
       spawn(Chain, :counter, [send_to])
     end
 
