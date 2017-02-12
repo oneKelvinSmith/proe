@@ -17,10 +17,8 @@ defmodule TickerTest do
 
   describe "register/1" do
     test "registers a given client to receive ticks" do
-      test = self()
-
       Ticker.start
-      Ticker.register(test)
+      Ticker.register(self())
 
       assert_receive {:tick}, Ticker.interval + 10
     end
@@ -44,8 +42,8 @@ defmodule TickerTest do
 
       timeout = Ticker.interval + 10
 
-      assert_receive {:ticked, ^first}, timeout
       assert_receive {:ticked, ^second}, timeout
+      assert_receive {:ticked, ^first}, timeout
     end
   end
 end

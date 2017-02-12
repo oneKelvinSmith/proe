@@ -15,16 +15,26 @@ defmodule Ticker do
 
   def generator(clients) do
     receive do
-      {:register, pid} ->
-        IO.puts "registering #{inspect pid}"
-        generator([pid | clients])
+      {:register, new_client} ->
+        IO.puts "registering #{inspect new_client}"
+        generator([new_client | clients])
     after
       @interval ->
+        clients
+        |> tick
+        |> generator
+    end
+  end
+
+  defp tick(clients) do
+    case clients do
+      [client | rest] ->
+        send client, {:tick}
+        IO.puts "tick sent to #{inspect client}"
+        rest ++ [client]
+      [] ->
         IO.puts "tick"
-        Enum.each clients, fn client ->
-          send client, {:tick}
-        end
-        generator(clients)
+        []
     end
   end
 end

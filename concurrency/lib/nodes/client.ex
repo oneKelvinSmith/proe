@@ -7,7 +7,7 @@ defmodule Client do
   def receiver do
     receive do
       {:tick} ->
-        IO.puts "tock in client"
+        IO.puts "tock in client #{inspect self()}"
         receiver()
     end
   end
