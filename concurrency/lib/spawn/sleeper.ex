@@ -1,5 +1,5 @@
 defmodule Sleeper do
-  import :timer, only: [ sleep: 1 ]
+  import :timer, only: [sleep: 1]
 
   def a_simple_death(parent) do
     send parent, {self(), :death_is_imminent}

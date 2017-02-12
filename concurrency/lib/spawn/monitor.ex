@@ -1,5 +1,5 @@
 defmodule Monitor do
-  import :timer, only: [ sleep: 1 ]
+  import :timer, only: [sleep: 1]
 
   def sad_function do
     sleep 500
