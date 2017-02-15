@@ -17,11 +17,23 @@ defmodule RingTickerTest do
 
   describe "generator/1" do
     test "sends ticks to the client" do
-      generator = spawn(RingTicker, :generator, [[self()]])
+      test = self()
+      generator = spawn(RingTicker, :generator, [[test]])
 
-      timeout = RingTicker.interval + 10
+      receive do
+        {:tick} ->
+          send test,      {:ticked}
+          send generator, {:tick}
+      end
 
-      assert_receive {:tick}, timeout
+      assert_receive {:ticked}
+
+      receive do
+        {:tick} ->
+          send test, {:ticked_again}
+      end
+
+      assert_receive {:ticked_again}
     end
   end
 end

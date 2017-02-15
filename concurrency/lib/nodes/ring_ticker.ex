@@ -14,14 +14,14 @@ defmodule RingTicker do
 
   def generator(clients) do
     receive do
+      {:tick} -> generator(clients)
     after
       @interval ->
         case clients do
-          [client | _] ->
-            send client, {:tick}
-          [] ->
-            generator(clients)
+          []           -> :fallthrough
+          [client | _] -> send client, {:tick}
         end
+        generator(clients)
     end
   end
 
