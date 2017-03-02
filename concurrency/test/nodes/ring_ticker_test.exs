@@ -13,12 +13,20 @@ defmodule RingTickerTest do
 
       assert :global.whereis_name(:ring_ticker) == client
     end
+
+    test "registered the new client globally" do
+      {:ok, client}     = RingTicker.start
+      {:ok, new_client} = RingTicker.start
+
+      refute :global.whereis_name(:ring_ticker) == client
+      assert :global.whereis_name(:ring_ticker) == new_client
+    end
   end
 
   describe "generator/1" do
     test "sends ticks to the client" do
       test = self()
-      generator = spawn(RingTicker, :generator, [[test]])
+      generator = spawn(RingTicker, :generator, [test])
 
       receive do
         {:tick} ->
@@ -29,8 +37,7 @@ defmodule RingTickerTest do
       assert_receive {:ticked}
 
       receive do
-        {:tick} ->
-          send test, {:ticked_again}
+        {:tick} -> send test, {:ticked_again}
       end
 
       assert_receive {:ticked_again}
